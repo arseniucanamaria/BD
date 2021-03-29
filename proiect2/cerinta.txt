@@ -1,0 +1,16 @@
+Tema pentru colocviul final de laborator
+
+Se va implementa o aplicatie web (sau desktop) corespunzatoare
+subiectului „Colocviu partial laborator BD” primit la prima lucrare de
+laborator.
+
+Cerinte:
+1. BD implementata cu SGBD ORACLE, MySql sau MSSQL
+2. La nivel aplicatie (UI) implementare cu PHP (optional cu Javascript, CSS) sau cu Java sau
+cu C#
+3. Se vor implementa numai interogarile (subpunctele 3-6) de pe biletul „Colocviu partial
+laborator BD”. Pentru o notare cât mai buna se vor respecta cerin?ele de detaliu pentru
+interfata utilizator.
+4. Trebuie sa se foloseasca una sau mai multe functii definite de utilizator în schema BD
+(proceduri stocate). Deci cel putin într-o interogare codul PHP (sau în limbajul folosit)
+trebuie sa apeleze o procedura stocata (sau functie utilizator „UDF” – din BD).
