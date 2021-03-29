@@ -1,0 +1,262 @@
+--Stergem tabelele in caz ca exista deja
+drop table Persoana;
+drop table Deviz;
+drop table Piesa;
+drop table Piesa_Deviz;
+
+   >> 03.01 <<
+a.CREATE TABLE Persoana(
+id NUMBER,
+nume VARCHAR2(20),
+email VARCHAR(40),
+adresa VARCHAR2(40)
+);
+
+b.CREATE TABLE Deviz(
+id_d NUMBER,
+data_introducere DATE,
+aparat VARCHAR2(20),
+simptome VARCHAR2(30),
+defect VARCHAR2(20),
+data_constatare DATE,
+data_finalizare DATE,
+durata NUMBER,
+manopera_ora NUMBER,
+total NUMBER,
+id_client NUMBER,
+id_depanator NUMBER
+);
+
+c.CREATE TABLE Piesa(
+id_p NUMBER,
+descriere VARCHAR2(20),
+fabricant VARCHAR2(20),
+cantitate_stoc NUMBER,
+pret_c NUMBER,
+UNIQUE (descriere, fabricant)
+);
+
+d.CREATE TABLE Piesa_Deviz(
+id_d NUMBER,
+id_p NUMBER,
+cantitate NUMBER,
+pret_r NUMBER
+);
+
+
+e. declararea cheilor primare si straine
+ALTER TABLE Persoana ADD PRIMARY KEY (id);
+ALTER TABLE Deviz ADD PRIMARY KEY (id_d);
+ALTER TABLE Piesa ADD PRIMARY KEY (id_p);
+ALTER TABLE Piesa_Deviz ADD FOREIGN KEY(id_d) REFERENCES Deviz(id_d);
+ALTER TABLE Piesa_Deviz ADD FOREIGN KEY(id_p) REFERENCES Piesa(id_p);
+ALTER TABLE Deviz ADD FOREIGN KEY(id_client) REFERENCES Persoana(id);
+ALTER TABLE Deviz ADD FOREIGN KEY(id_depanator) REFERENCES Persoana(id);
+
+f. modificare definitie tabela Piesa_Deviz pentru a adauga atributul sursa. 
+ALTER TABLE Piesa_Deviz
+ADD sursa VARCHAR2(20);
+
+
+    >> 03.02 -Constrangeri <<
+a. În tabela Persoana coloana email trebuie sa contina caracterul ‚@’.
+ALTER TABLE Persoana ADD CONSTRAINT email CHECK(email like '%@%'); 
+
+b. În tabela Deviz data_introducere, data_constatare si data_finalizare trebuie sa fie consecvente.
+ALTER TABLE Deviz ADD CONSTRAINT date_consecvente CHECK(data_constatare >= data_introducere and data_finalizare >= data_constatare);
+
+ ---Popularea tabelelor
+INSERT INTO Persoana(id,nume,email,adresa) VALUES(1,'Popescu George','popescu.george@yahoo.com','Bucuresti,str. Garoafelor, nr.2'); -C
+INSERT INTO Persoana(id,nume,email,adresa) VALUES(4,'Ujica Alina','ujica.alina@yahoo.com','Suceava, str. Mihai Eminescu, nr.15');-C
+INSERT INTO Persoana(id,nume,email,adresa) VALUES(2,'Sirghe Catalin','sirghe.catalin@yahoo.com','Bucuresti, str.Peana,nr.5');-D
+INSERT INTO Persoana(id,nume,email,adresa) VALUES(3,'Pasca Cristi','cristi.pasca@yahoo.com','Cluj-Napoca, str.Observatorului, nr 4');-D
+INSERT INTO Persoana(id,nume,email,adresa) VALUES(7,'Crisan Valentina','crisan.valentina@yahoo.com','Cluj-Napoca, str.Avram Iancu, nr 12');-C
+INSERT INTO Persoana(id,nume,email,adresa) VALUES(5,'Georgi Mihai','georgi.mihai@yahoo.com','Bucuresti, str.Cartitei, nr 45');--C
+INSERT INTO Persoana(id,nume,email,adresa) VALUES(17,'Pruna Vasilica','vasiiiilica@yahoo.com','Oradea, str.Chichiulea, nr 3');--D
+INSERT INTO Persoana(id,nume,email,adresa) VALUES(11,'Pop Mircea','pop.mircea@yahoo.com','Bucuresti, str.Podu Negru, nr 21');--C
+
+INSERT INTO Deviz(id_d, data_introducere, aparat, simptome, defect, data_constatare,
+data_finalizare, durata, manopera_ora, total, id_client, id_depanator) VALUES(111,'03-May-2019','radio','sunet infundat','defect auditiv','05-May-2019','06-May-2019',8,60,61.8,5,17);
+INSERT INTO Deviz(id_d, data_introducere, aparat, simptome, defect, data_constatare,
+data_finalizare, durata, manopera_ora, total, id_client, id_depanator) VALUES(101,'12-Mar-2019','masina auto','parbriz spart','defect vizual','12-Mar-2019','13-Mai-2019',5,15,59,7,3);
+INSERT INTO Deviz(id_d, data_introducere, aparat, simptome, defect, data_constatare,
+data_finalizare, durata, manopera_ora, total, id_client, id_depanator) VALUES(98,'26-Sep-2019','TV Philips','lipsa imagine','defect vizual','26-Sep-2019','28-Sep-2019',22,25,85,1,2);
+INSERT INTO Deviz(id_d, data_introducere, aparat, simptome, defect, data_constatare,
+data_finalizare, durata, manopera_ora, total, id_client, id_depanator) VALUES(120,'01-Oct-2019','masina auto','pana','defect tactil','07-Oct-2019','07-Oct-2019',2,20,41.75,4,2);
+INSERT INTO Deviz(id_d, data_introducere, aparat, simptome, defect, data_constatare,
+data_finalizare, durata, manopera_ora, total, id_client, id_depanator) VALUES(88,'17-Dec-2019','masina auto','defectare far','defect vizual','19-Dec-2019','19-Dec-2019',1,25,35,7,3);
+
+INSERT INTO Piesa(id_p, descriere, fabricant, cantitate_stoc, pret_c) VALUES(19,'surub','SC EUROSTEEL SRL',55,1.5); 
+INSERT INTO Piesa(id_p, descriere, fabricant, cantitate_stoc, pret_c) VALUES(12,'piulita','SC EUROSTEEL SRL',60,1.2); 
+INSERT INTO Piesa(id_p, descriere, fabricant, cantitate_stoc, pret_c) VALUES(11,'surubelnita','Hans',5,12); 
+INSERT INTO Piesa(id_p, descriere, fabricant, cantitate_stoc, pret_c) VALUES(15,'roata rezerva','Beta',3,20); 
+INSERT INTO Piesa(id_p, descriere, fabricant, cantitate_stoc, pret_c) VALUES(1,'sticla','Hans',5,20); 
+INSERT INTO Piesa(id_p, descriere, fabricant, cantitate_stoc, pret_c) VALUES(7,'far','SC EUROSTEEL SRL',10,6); 
+INSERT INTO Piesa(id_p, descriere, fabricant, cantitate_stoc, pret_c) VALUES(9,'imbus',Beta',4,5); 
+INSERT INTO Piesa(id_p, descriere, fabricant, cantitate_stoc, pret_c) VALUES(23,'filtru ulei','SC CUSC SRL',3,22); 
+INSERT INTO Piesa(id_p, descriere, fabricant, cantitate_stoc, pret_c) VALUES(2,'disc ambreiaj','SC EUROSTEEL SRL',9,58); 
+INSERT INTO Piesa(id_p, descriere, fabricant, cantitate_stoc, pret_c) VALUES(54,'lampa','Lampinina',25,28); 
+INSERT INTO Piesa(id_p, descriere, fabricant, cantitate_stoc, pret_c) VALUES(5,'adeziv','Mannol',8,22); 
+
+
+INSERT INTO Piesa_Deviz(id_d, id_p, cantitate, pret_r) VALUES(111,19,2,1.8);
+INSERT INTO Piesa_Deviz(id_d, id_p, cantitate, pret_r) VALUES(111,12,2,1.1);
+INSERT INTO Piesa_Deviz(id_d, id_p, cantitate, pret_r) VALUES(120,15,1,18);
+INSERT INTO Piesa_Deviz(id_d, id_p, cantitate, pret_r) VALUES(120,19,5,1.45);
+INSERT INTO Piesa_Deviz(id_d, id_p, cantitate, pret_r) VALUES(120,12,5,1.3);
+INSERT INTO Piesa_Deviz(id_d, id_p, cantitate, pret_r) VALUES(101,1,1,19);
+INSERT INTO Piesa_Deviz(id_d, id_p, cantitate, pret_r) VALUES(101,5,1,25);
+INSERT INTO Piesa_Deviz(id_d, id_p, cantitate, pret_r) VALUES(98,54,2,30);
+INSERT INTO Piesa_Deviz(id_d, id_p, cantitate, pret_r) VALUES(88,7,1,10);
+
+
+      >> 03.03 -Interogari <<
+a.Sa se gaseasca detaliile pentru devizele care au constatare si sunt nefinalizate la data ‚01-SEP-2019’, ordonat dupa data introducere.  
+SELECT *
+FROM Deviz
+WHERE data_constatare IS NOT NULL AND data_finalizare > '01-Sep-2019'
+ORDER BY data_introducere;
+
+b.Sa se gaseasca detaliile pieselor care au cantitate_stoc sub 5 ordonat crescator dupa cantitate_stoc si crescator dupa descriere.
+SELECT *
+FROM Piesa 
+WHERE cantitate_stoc < 5
+ORDER BY cantitate_stoc ASC, descriere ASC;
+
+    
+       >> 03.04 -Interogari JOIN <<
+a. Sa se gaseasca (id_d, descriere, fabricant, pret_c si pret_r) pentru piesele cu pretul de
+catalog mai mare decât pretul real. 
+
+SELECT id_d, descriere, fabricant, pret_c, pret_r
+FROM Piesa p INNER JOIN Piesa_Deviz pd
+ON p.id_p = pd.id_p AND p.pret_c >= pd.pret_r;
+
+
+b. Sa se gaseasca perechi de piese (id_p1, id_p2) care apar pe acelasi deviz în aceeasi
+cantitate. O pereche este unica în rezultat.
+
+SELECT DISTINCT LEAST(a.id_p, b.id_p) AS Id_Piesa1 ,GREATEST(a.id_p, b.id_p) AS Id_Piesa2
+FROM (Piesa_Deviz a INNER JOIN Piesa_Deviz b ON  (a.id_d = b.id_d) AND (a.cantitate =  b.cantitate)) 
+WHERE a.id_p <> b.id_p;
+
+   
+        >> 03.05 -Interogari imbricate <<
+a. Sa se gaseasca detaliile devizelor care au folosit piesa cu descrierea ‚surub’.
+
+SELECT *
+FROM Deviz 
+WHERE id_d = ANY(SELECT id_d FROM Piesa_Deviz WHERE id_p = ANY(SELECT id_p FROM Piesa WHERE descriere='surub'));
+
+b. Sa se gaseasca descrierea si fabricantul pentru piesa cu pretul real cel mai
+mare.
+
+SELECT descriere, fabricant
+FROM Piesa
+WHERE id_p = ANY (SELECT id_p FROM Piesa_Deviz WHERE pret_r >= ALL (SELECT pret_r FROM Piesa_Deviz));     
+
+
+
+         >> 03.06 -Interogari cu functii de agregare <<
+a. Sa se gaseasca pentru fiecare depanator numarul de devize (nume_depanator,
+câte_devize) cu data_finalizare în luna septembrie 2019.
+
+SELECT p.nume AS nume_depanator, count(*) AS Nr_devize
+FROM Deviz d LEFT JOIN Persoana p ON d.id_depanator = p.id
+WHERE data_finalizare BETWEEN '01-Sep-2019' AND '30-Sep-2019'
+GROUP BY  d.id_depanator,p.nume;
+
+b. Sa se gaseasca pentru fiecare piesa folosita la devize cu data_finalizare în
+luna septembrie 2019 cantitatea totala (descriere, fabricant, cantitate_totala). 
+
+SELECT p.descriere, p.fabricant, SUM(pd.cantitate) AS cantitate_totala
+FROM piesa_deviz pd LEFT JOIN deviz d ON pd.id_d = d.id_d LEFT JOIN piesa p ON pd.id_p = p.id_p
+WHERE data_finalizare BETWEEN '01-Sep-2019' AND '30-Sep-2019'
+GROUP BY pd.id_p, p.descriere, p.fabricant;
+
+
+          >> 03.07 -Actualizare BD <<
+a. Sa se adauge devizul cu identificatorul 123 din data 30 Septembrie 2019,
+aparatul ’TV Samsung’ cu simptome ’imagine desincronizata’ clientul cu
+identificator 11, depanator alocat cu identificator 17.
+  INSERT INTO Deviz(id_d, data_introducere, aparat, simptome,  id_client, id_depanator) VALUES(123, '30-Sep-2019',’TV Samsung', ’imagine desincronizata’, 11, 17);
+
+b. Sa se stearga piesele care nu sunt folosite la nici un deviz.
+   DELETE FROM Piesa
+   WHERE id_p NOT IN (SELECT id_p FROM Piesa_Deviz);
+
+c. Sa se modifice total scazând cu 5% pentru devizul cu id 111.
+   UPDATE Deviz 
+   SET total = 0.95*total
+   WHERE id_d=111;
+
+
+          >> 03.08 -Triggere << 
+a. A actualiza cantitate_stoc pentru piesa la adaugarea piesei pentru un deviz.
+
+CREATE or REPLACE trigger UpdateCantitateStoc
+    AFTER INSERT ON Piesa_Deviz
+    referencing new as new_v
+    for each row
+
+declare 
+begin 
+
+ UPDATE Piesa
+    SET cantitate_stoc = cantitate_stoc - :new_v.cantitate
+    WHERE id_p = :new_v.id_p;
+
+end;
+
+b. A nu permite modificarea datei de constatare a unui deviz, daca exista piese
+folosite pentru deviz.
+
+CREATE or REPLACE trigger upd_deviz
+   BEFORE UPDATE of data_constatare ON Deviz
+   for each row
+declare 
+cnt integer;
+
+begin
+   select count(*) into cnt from Piesa_Deviz pd WHERE pd.id_d = :old.id_d;
+
+if cnt > 0 then 
+  raise_application_error(-20101, 'Contine deja piese');
+end if;
+end;
+   
+select * from piesa_deviz;
+
+update deviz set data_constatare = '01-Sep-2019' 
+     where id_d = 111;
+
+c. Presupunând vederea:
+CREATE VIEW PieseDeviz123 AS
+SELECT d.id_d, data_introducere, aparat, simptome, defect, data_constatare, data_finalizare, durata, manopera_ora, total, a.nume as client,
+ b.nume as depanator, descriere, fabricant, cantitate, pret_r
+FROM Persoana a, Persoana b, Deviz d, Piesa_Deviz c, Piesa p
+WHERE d.id_d = 123 AND
+      a.id = d.id_client AND 
+      b.id = d.id_depanator AND
+      c.id_d = d.id_d AND p.id_p = c.id_p;
+Sa se defineasca un trigger instead-of pentru a permite adaugare prin aceasta
+vedere. 
+
+
+Raspuns:
+
+create or replace trigger ins_piesedeviz
+instead of insert on PieseDeviz123
+referencing new as new_v
+declare
+id_p_v integer;
+begin
+select id_p into id_p_v from piesa p where p.descriere = :new_v.descriere and p.fabricant = :new_v.fabricant;
+insert into piesa_deviz values (:new_v.id_d, id_p_v, :new_v.cantitate, :new_v.pret_r);
+exception
+ when no_data_found then raise_application_error(-20101,'id piesa negasita');
+end;
+
+
+-- o sa se insereze o noua tupla piesa_deviz.
+insert into PieseDeviz123 VALUES (200, '12-Mar-2019', 'masina auto', 'parbriz spart', 'defect vizual', '12-Mar-2019', '13-Mar-2019', 5, 15, 59, 'Crisan Valentina', 'Pasca Cristi', 'piulita', 'SC EUROSTEEL SRL', 12, 23);
